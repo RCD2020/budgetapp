@@ -14,8 +14,10 @@ struct SplitsView: View {
     
     var body: some View {
         List {
+            // Displays all splits
             ForEach($budget.settings.splits) { $split in
-                NavigationLink(destination: SplitsTransferView(split: $split)) {
+                // Split View Screen
+                NavigationLink(destination: SplitsTransferView(budget: $budget, split: $split)) {
                     HStack {
                         Text(split.name)
                             .font(.headline)
@@ -28,6 +30,7 @@ struct SplitsView: View {
         .navigationTitle(Text("Splits"))
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
+                // Display Splits Edit Button
                 Button(action: {
                     isSplitsEditView = true
                     data = budget.data
@@ -38,18 +41,27 @@ struct SplitsView: View {
         }
         .sheet(isPresented: $isSplitsEditView) {
             NavigationStack {
+                // Splits Edit Sheet
                 SplitsEditView(data: $data)
                     .navigationTitle(Text("Edit Splits"))
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {
+                            // Save Splits Configuration Button
                             Button("Done") {
                                 isSplitsEditView = false
                                 budget.update(from: data)
+                                // Save Action
+                                BudgetStore.save(budget: budget) { result in
+                                    if case .failure(let error) = result {
+                                        fatalError(error.localizedDescription)
+                                    }
+                                }
                             }
                                 .disabled(!data.settings.is100())
                         }
                         
                         ToolbarItem(placement: .cancellationAction) {
+                            // Cancel Splits Configuration Button
                             Button("Cancel") {
                                 isSplitsEditView = false
                             }

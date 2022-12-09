@@ -13,6 +13,7 @@ struct BackupView: View {
     
     var body: some View {
         List {
+            // Display Backup Info
             Section(header: Text("Info")) {
                 HStack {
                     Text("Spending")
@@ -31,6 +32,7 @@ struct BackupView: View {
                 }
             }
             
+            // Display Splits
             Section(header: Text("Splits")) {
                 ForEach(backup.settings.splits) { split in
                     HStack {
@@ -41,9 +43,17 @@ struct BackupView: View {
                 }
             }
             
+            // Restore Back !!! WIP: ( Causes Error ) !!!
             Section {
                 Button(action: {
+                    // Loads Backup
                     budget.loadBackup(loadedBackup: backup)
+                    // Save Action
+                    BudgetStore.save(budget: budget) { result in
+                        if case .failure(let error) = result {
+                            fatalError(error.localizedDescription)
+                        }
+                    }
                 }) {
                     Label("Restore Backup", systemImage: "square.and.arrow.down")
                         .font(.headline)

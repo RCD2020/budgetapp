@@ -17,14 +17,17 @@ struct PayView: View {
     
     var body: some View {
         List {
+            // Average Title
             Section(header: Text("Averages (Per \(budget.settings.payTerm.singleName))")) {
                 
+                // Average Past Month Label
                 HStack {
                     Label("Past Month", systemImage: "gobackward.30")
                     Spacer()
                     Text(budget.getMonthAverage().currencyFormat)
                 }
                 
+                // Average Past Year Label
                 HStack {
                     Label("Past Year", systemImage: "gobackward.minus")
                     Spacer()
@@ -39,6 +42,7 @@ struct PayView: View {
                 
             }
             
+            // Paycheck List
             Section(header: Text("History")) {
                 
                 ForEach(budget.payHistory.reversed()) { history in
@@ -56,6 +60,7 @@ struct PayView: View {
             }
         }
         .toolbar {
+            // Show Splits Edit Sheet (how the paychecks are divided)
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     isSplitsEditView = true
@@ -65,6 +70,7 @@ struct PayView: View {
                 }
             }
             
+            // Show New Paycheck Sheet
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     isNewPayView = true
@@ -76,18 +82,28 @@ struct PayView: View {
         }
         .sheet(isPresented: $isSplitsEditView) {
             NavigationStack {
+                // Edit Splits
                 SplitsEditView(data: $data)
                     .navigationTitle(Text("Edit Splits"))
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {
+                            // Save New Split Configuration
                             Button("Done") {
+                                // Update Splits
                                 isSplitsEditView = false
                                 budget.update(from: data)
+                                // Save Action
+                                BudgetStore.save(budget: budget) { result in
+                                    if case .failure(let error) = result {
+                                        fatalError(error.localizedDescription)
+                                    }
+                                }
                             }
                                 .disabled(!data.settings.is100())
                         }
                         
                         ToolbarItem(placement: .cancellationAction) {
+                            // Cancel Splits Edit
                             Button("Cancel") {
                                 isSplitsEditView = false
                             }
@@ -97,18 +113,27 @@ struct PayView: View {
         }
         .sheet(isPresented: $isNewPayView) {
             NavigationStack {
+                // New Paycheck Sheet
                 NewPayView(data: $newHistory)
                     .navigationTitle(Text("New Paycheck"))
                     .toolbar {
+                        // Save New Paycheck
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Done") {
                                 isNewPayView = false
                                 payTotal = budget.addPay(data: newHistory)
+                                // Save Action
+                                BudgetStore.save(budget: budget) { result in
+                                    if case .failure(let error) = result {
+                                        fatalError(error.localizedDescription)
+                                    }
+                                }
                             }
                             .disabled(newHistory.isEmpty())
                         }
                         
                         ToolbarItem(placement: .cancellationAction) {
+                            // Cancel New Paycheck
                             Button("Cancel") {
                                 isNewPayView = false
                             }

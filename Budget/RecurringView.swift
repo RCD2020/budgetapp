@@ -15,6 +15,7 @@ struct RecurringView: View {
     
     var body: some View {
         List {
+            // Term Obligation Display
             Section(header: Text("Info")) {
                 HStack {
                     Label("\(budget.settings.payTerm.name.capitalized) Obligation", systemImage: "creditcard")
@@ -23,6 +24,7 @@ struct RecurringView: View {
                 }
             }
             
+            // Sort Buttons ( WIP: Causes Error )
             Section(header: Text("Sort by")) {
                 Button(action: {budget.recurSortByName()}) {
                     Text("Name")
@@ -35,17 +37,26 @@ struct RecurringView: View {
                 }
             }
             
+            // List of Obligations
             Section(header: Text("Obligations")) {
                 ForEach(budget.recurring) { recur in
                     RecurCardView(recur: recur, payTerm: budget.settings.payTerm)
                 }
                 .onDelete { indices in
+                    // Remove Obligation
                     budget.recurring.remove(atOffsets: indices)
                     budget.tallyRecur()
+                    // Save Action
+                    BudgetStore.save(budget: budget) { result in
+                        if case .failure(let error) = result {
+                            fatalError(error.localizedDescription)
+                        }
+                    }
                 }
             }
         }
         .toolbar {
+            // New Obligation Button
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
                     isNewRecurView = true
@@ -56,17 +67,26 @@ struct RecurringView: View {
             }
         }
         .sheet(isPresented: $isNewRecurView) {
+            // New Obligation Sheet
             NavigationStack {
                 NewRecurView(data: $data)
                     .navigationTitle("New Recurring Cost")
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Done") {
+                                // Add Obligation
                                 budget.addRecurring(recur: Recurring(data: data, payTerm: budget.settings.payTerm))
                                 isNewRecurView = false
+                                // Save Action
+                                BudgetStore.save(budget: budget) { result in
+                                    if case .failure(let error) = result {
+                                        fatalError(error.localizedDescription)
+                                    }
+                                }
                             }
                         }
                         ToolbarItem(placement: .cancellationAction) {
+                            // Cancel New Obligation
                             Button("Cancel") {
                                 isNewRecurView = false
                             }
