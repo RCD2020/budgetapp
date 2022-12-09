@@ -12,33 +12,35 @@ struct BackupView: View {
     var backup: Backup
     
     var body: some View {
-        List {
-            // Display Backup Info
-            Section(header: Text("Info")) {
-                HStack {
-                    Text("Spending")
-                    Spacer()
-                    Text(backup.spending.currencyFormat)
-                }
-                HStack {
-                    Text("Obligation")
-                    Spacer()
-                    Text(backup.obligation.currencyFormat)
-                }
-                HStack {
-                    Text("Backup Date")
-                    Spacer()
-                    Text(backup.backupDate.monthTimeFormat)
-                }
-            }
-            
-            // Display Splits
-            Section(header: Text("Splits")) {
-                ForEach(backup.settings.splits) { split in
+        VStack {
+            List {
+                // Display Backup Info
+                Section(header: Text("Info")) {
                     HStack {
-                        Text(split.name + ": \(split.portion)%")
+                        Text("Spending")
                         Spacer()
-                        Text(split.transferAmount.currencyFormat)
+                        Text(backup.spending.currencyFormat)
+                    }
+                    HStack {
+                        Text("Obligation")
+                        Spacer()
+                        Text(backup.obligation.currencyFormat)
+                    }
+                    HStack {
+                        Text("Backup Date")
+                        Spacer()
+                        Text(backup.backupDate.monthTimeFormat)
+                    }
+                }
+                
+                // Display Splits
+                Section(header: Text("Splits")) {
+                    ForEach(backup.settings.splits) { split in
+                        HStack {
+                            Text(split.name + ": \(split.portion)%")
+                            Spacer()
+                            Text(split.transferAmount.currencyFormat)
+                        }
                     }
                 }
             }
@@ -58,6 +60,7 @@ struct BackupView: View {
                     Label("Restore Backup", systemImage: "square.and.arrow.down")
                         .font(.headline)
                 }
+                .buttonStyle(.borderless)
             }
         }
     }

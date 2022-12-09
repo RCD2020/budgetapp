@@ -26,15 +26,35 @@ struct RecurringView: View {
             
             // Sort Buttons ( WIP: Causes Error )
             Section(header: Text("Sort by")) {
-                Button(action: {budget.recurSortByName()}) {
-                    Text("Name")
+                HStack {
+                    Button(action: {budget.recurSortByName()}) {
+                        Text("Name")
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Spacer()
+                    
+                    Button(action: {budget.recurSortByCost()}) {
+                        Text("Cost")
+                    }
+                    .buttonStyle(.bordered)
+                    
+                    Spacer()
+                    
+                    Button(action: {budget.recurSortByTermCost()}) {
+                        Text("Cost per \(budget.settings.payTerm.singleName.capitalized)")
+                    }
+                    .buttonStyle(.bordered)
                 }
-                Button(action: {budget.recurSortByCost()}) {
-                    Text("Cost")
-                }
-                Button(action: {budget.recurSortByTermCost()}) {
-                    Text("Cost per \(budget.settings.payTerm.singleName.capitalized)")
-                }
+//                Button(action: {budget.recurSortByName()}) {
+//                    Text("Name")
+//                }
+//                Button(action: {budget.recurSortByCost()}) {
+//                    Text("Cost")
+//                }
+//                Button(action: {budget.recurSortByTermCost()}) {
+//                    Text("Cost per \(budget.settings.payTerm.singleName.capitalized)")
+//                }
             }
             
             // List of Obligations

@@ -60,7 +60,6 @@ struct MainView: View {
                 NavigationLink(destination: BackupsView(budget: $budget)) {
                     Label("Backups", systemImage: "square.and.arrow.down")
                 }
-                Button("Save", action: saveAction)
             }
         }
         .toolbar {
@@ -117,11 +116,11 @@ struct MainView: View {
             // Take out obligations
             budget.subtractRecurring()
             // Save Action
-            BudgetStore.save(budget: budget) { result in
-                if case .failure(let error) = result {
-                    fatalError(error.localizedDescription)
-                }
-            }
+//            BudgetStore.save(budget: budget) { result in
+//                if case .failure(let error) = result {
+//                    fatalError(error.localizedDescription)
+//                }
+//            }
             
         }
 //        .onChange(of: scenePhase) { phase in
