@@ -25,7 +25,8 @@ struct PurchaseView: View {
             }
             
             // Purchase List
-            Section(header: Text("Purchases")) {
+            Section(header: Text("Purchases"), footer: Text(
+            "The number shown on the categories is net spending versus earning, for example if it is -$100 then you spent $100 more than you earned for spending.")) {
                 ForEach(budget.purchases) { history in
                     HStack {
                         if history.isTerm {

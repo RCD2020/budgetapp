@@ -612,7 +612,7 @@ extension Recurring {
         var cost: Int
         let numberFormatter: NumberFormatter
         
-        init(name: String = "", term: RecurringTerm = .weeklyRecur, cost: Int = 0) {
+        init(name: String = "", term: RecurringTerm = .monthlyRecur, cost: Int = 0) {
             self.name = name
             self.term = term
             self.cost = cost

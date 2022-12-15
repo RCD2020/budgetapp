@@ -34,7 +34,7 @@ struct SplitsTransferView: View {
             }
             
             // List of Transactions
-            Section(header: Text("Transactions")) {
+            Section(header: Text("Transactions"), footer: Text("The number shown on the categories is net \(split.name) versus earning, for example if it is -$100 then you spent $100 more than you earned for \(split.name).")) {
                 ForEach(split.history) { history in
                     HStack {
                         if history.isTerm {
