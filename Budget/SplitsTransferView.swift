@@ -67,7 +67,7 @@ struct SplitsTransferView: View {
         .sheet(isPresented: $isNewTransactionView) {
             // New Transaction Sheet
             NavigationStack {
-                NewTransactionView(data: $data, isIn: $isIn)
+                NewTransactionView(data: $data, isIn: $isIn, inName: "Refund", outName: "Transaction")
                     .navigationTitle(Text("Add Transaction"))
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {

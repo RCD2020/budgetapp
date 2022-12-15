@@ -55,7 +55,7 @@ struct PurchaseView: View {
         .sheet(isPresented: $isNewPurchaseView) {
             // Add Purchase Sheet
             NavigationStack {
-                NewTransactionView(data: $data, isIn: $isIn)
+                NewTransactionView(data: $data, isIn: $isIn, inName: "Refund", outName: "Purchase")
                     .navigationTitle(Text("New Purchase"))
                     .toolbar {
                         ToolbarItem(placement: .confirmationAction) {

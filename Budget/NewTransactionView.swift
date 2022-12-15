@@ -10,14 +10,19 @@ import SwiftUI
 struct NewTransactionView: View {
     @Binding var data: History.Data
     @Binding var isIn: Bool
+    var isReversible: Bool = true
+    var inName: String = "In"
+    var outName: String = "Out"
     
     var body: some View {
         Form {
             TextField("Name", text: $data.source)
             CurrencyTextField(numberFormatter: History.numberFormatter, value: $data.amount)
-            Picker("In / Out", selection: $isIn) {
-                Text("In").tag(true)
-                Text("Out").tag(false)
+            if isReversible {
+                Picker("\(inName) / \(outName)", selection: $isIn) {
+                    Text(inName).tag(true)
+                    Text(outName).tag(false)
+                }
             }
             DatePicker("Data", selection: $data.date, displayedComponents: [.date])
         }
