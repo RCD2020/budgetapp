@@ -495,6 +495,17 @@ struct Budget: Codable {
         newBackup()
         update(from: loadedBackup)
     }
+    
+    mutating func clear() {
+        newBackup()
+        spending = 0
+        payHistory = []
+        obligation = 0
+        recurring = []
+        purchases = []
+        settings.splits = []
+        settings.spendSplit = 100
+    }
 }
 
 extension Budget {
