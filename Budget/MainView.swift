@@ -112,9 +112,9 @@ struct MainView: View {
                     }
             }
         }
-        .onAppear {
+//        .onAppear {
             // Take out obligations
-            budget.subtractRecurring()
+//            budget.subtractRecurring()
             // Save Action
 //            BudgetStore.save(budget: budget) { result in
 //                if case .failure(let error) = result {
@@ -122,7 +122,7 @@ struct MainView: View {
 //                }
 //            }
             
-        }
+//        }
 //        .onChange(of: scenePhase) { phase in
 //            if phase == .inactive { saveAction() }
 //        }

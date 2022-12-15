@@ -23,6 +23,8 @@ struct BudgetApp: App {
                 }
             }
             .onAppear {
+                
+                // Load Save Data
                 BudgetStore.load { result in
                     switch result {
                     case .failure(let error):
@@ -31,6 +33,12 @@ struct BudgetApp: App {
                         store.budget = budget
                     }
                 }
+                
+                // Backup
+//                store.budget.newBackup()
+                
+                // Factor in New Subs
+                store.budget.subtractRecurring()
             }
         }
     }
