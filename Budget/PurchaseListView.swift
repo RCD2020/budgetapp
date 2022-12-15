@@ -21,6 +21,6 @@ struct PurchaseListView: View {
 
 struct PurchaseListView_Previews: PreviewProvider {
     static var previews: some View {
-        PurchaseListView(stubs: [Budget.sampleData.purchases[0]])
+        PurchaseListView(stubs: [])
     }
 }

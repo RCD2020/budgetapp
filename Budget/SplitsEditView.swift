@@ -12,42 +12,51 @@ struct SplitsEditView: View {
     @State private var newSplit = ""
     
     var body: some View {
-        Form {
-            HStack {
-                Text("Spending")
-                TextField("", value: $data.settings.spendSplit, formatter: NumberFormatter())
-                Stepper(value: $data.settings.spendSplit, in: 0...100) {
-                    EmptyView()
-                }
-            }
-            
-            ForEach($data.settings.splits) { $split in
-                
+        VStack {
+            Form {
                 HStack {
-                    Text(split.name)
-                    TextField("", value: $split.portion, formatter: NumberFormatter())
-                    Stepper(value: $split.portion, in: 0...100) {
+                    Text("Spending")
+                    TextField("", value: $data.settings.spendSplit, formatter: NumberFormatter())
+                    Stepper(value: $data.settings.spendSplit, in: 0...100) {
                         EmptyView()
                     }
                 }
-            }
-            .onDelete { indices in
-                data.settings.splits.remove(atOffsets: indices)
+                
+                ForEach($data.settings.splits) { $split in
+                    
+                    HStack {
+                        Text(split.name)
+                        TextField("", value: $split.portion, formatter: NumberFormatter())
+                        Stepper(value: $split.portion, in: 0...100) {
+                            EmptyView()
+                        }
+                    }
+                }
+                .onDelete { indices in
+                    data.settings.splits.remove(atOffsets: indices)
+                }
+                
+                HStack {
+                    TextField("New Split", text: $newSplit)
+                    Button(action: {
+                        withAnimation {
+                            let split = Splittee(name: newSplit, portion: 0, transferAmount: 0, history: [])
+                            data.settings.splits.append(split)
+                            newSplit = ""
+                        }
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                    }
+                    .disabled(newSplit.isEmpty)
+                }
             }
             
-            HStack {
-                TextField("New Split", text: $newSplit)
-                Button(action: {
-                    withAnimation {
-                        let split = Splittee(name: newSplit, portion: 0, transferAmount: 0, history: [])
-                        data.settings.splits.append(split)
-                        newSplit = ""
-                    }
-                }) {
-                    Image(systemName: "plus.circle.fill")
-                }
-                .disabled(newSplit.isEmpty)
+            if !data.settings.is100() {
+                Label("Splits must add to 100", systemImage: "exclamationmark.circle")
+                    .foregroundColor(.red)
+                    .bold()
             }
+            
         }
     }
 }

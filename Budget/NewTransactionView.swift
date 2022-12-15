@@ -15,16 +15,26 @@ struct NewTransactionView: View {
     var outName: String = "Out"
     
     var body: some View {
-        Form {
-            TextField("Name", text: $data.source)
-            CurrencyTextField(numberFormatter: History.numberFormatter, value: $data.amount)
-            if isReversible {
-                Picker("\(inName) / \(outName)", selection: $isIn) {
-                    Text(inName).tag(true)
-                    Text(outName).tag(false)
+        VStack {
+            Form {
+                TextField("Name", text: $data.source)
+                CurrencyTextField(numberFormatter: History.numberFormatter, value: $data.amount)
+                if isReversible {
+                    Picker("\(inName) / \(outName)", selection: $isIn) {
+                        Text(inName).tag(true)
+                        Text(outName).tag(false)
+                    }
+                }
+                DatePicker("Data", selection: $data.date, displayedComponents: [.date])
+            }
+            
+            if data.isEmpty() {
+                HStack {
+                    Label("Name and Price Required", systemImage: "exclamationmark.circle")
+                        .foregroundColor(.red)
+                        .bold()
                 }
             }
-            DatePicker("Data", selection: $data.date, displayedComponents: [.date])
         }
     }
 }

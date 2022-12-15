@@ -11,10 +11,18 @@ struct NewPayView: View {
     @Binding var data: History.Data
     
     var body: some View {
-        Form {
-            TextField("Name", text: $data.source)
-            CurrencyTextField(numberFormatter: History.numberFormatter, value: $data.amount)
-            DatePicker("Date", selection: $data.date, displayedComponents: [.date])
+        VStack {
+            Form {
+                TextField("Name", text: $data.source)
+                CurrencyTextField(numberFormatter: History.numberFormatter, value: $data.amount)
+                DatePicker("Date", selection: $data.date, displayedComponents: [.date])
+            }
+            
+            if data.isEmpty() {
+                Label("Requires Name and Price", systemImage: "exclamationmark.circle")
+                    .foregroundColor(.red)
+                    .bold()
+            }
         }
     }
 }
