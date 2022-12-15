@@ -612,6 +612,13 @@ extension Recurring {
         var cost: Int
         let numberFormatter: NumberFormatter
         
+        func isEmpty()->Bool {
+            if name.isEmpty || cost == 0 {
+                return true
+            }
+            return false
+        }
+        
         init(name: String = "", term: RecurringTerm = .monthlyRecur, cost: Int = 0) {
             self.name = name
             self.term = term

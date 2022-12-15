@@ -12,16 +12,25 @@ struct NewRecurView: View {
     @State private var test: Int = 54
     
     var body: some View {
-        Form {
-            TextField("Name", text: $data.name)
-            CurrencyTextField(numberFormatter: data.numberFormatter, value: $data.cost)
-            Picker("Frequency", selection: $data.term) {
-                Text("Weekly").tag(RecurringTerm.weeklyRecur)
-                Text("Monthly").tag(RecurringTerm.monthlyRecur)
-                Text("Quarterly").tag(RecurringTerm.quarterly)
-                Text("Yearly").tag(RecurringTerm.yearly)
+        VStack {
+            Form {
+                TextField("Name", text: $data.name)
+                CurrencyTextField(numberFormatter: data.numberFormatter, value: $data.cost)
+                Picker("Frequency", selection: $data.term) {
+                    Text("Weekly").tag(RecurringTerm.weeklyRecur)
+                    Text("Monthly").tag(RecurringTerm.monthlyRecur)
+                    Text("Quarterly").tag(RecurringTerm.quarterly)
+                    Text("Yearly").tag(RecurringTerm.yearly)
+                }
+    //            Text("\(data.cost)")
             }
-//            Text("\(data.cost)")
+            
+            if data.isEmpty() {
+                Label("Requires Name and Cost", systemImage: "exclamationmark.circle")
+                    .foregroundColor(.red)
+                    .bold()
+            }
+            
         }
     }
 }

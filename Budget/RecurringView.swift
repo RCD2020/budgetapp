@@ -104,6 +104,7 @@ struct RecurringView: View {
                                     }
                                 }
                             }
+                            .disabled(data.isEmpty())
                         }
                         ToolbarItem(placement: .cancellationAction) {
                             // Cancel New Obligation
