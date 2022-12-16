@@ -11,9 +11,31 @@ struct BackupsView: View {
     @State var isPresDelete: Bool = false
     @Binding var budget: Budget
     
+    // Random Data Gen
+    @Binding var randGen: Bool
+    
     var body: some View {
         VStack {
             List {
+                // Random Data Gen
+//                if !randGen {
+//                    Section(header: Text("Generate Random Data")) {
+//                        Button(action: {
+//                            randGen = true
+//                            budget.generateRandomData()
+//
+//                            // Save Action
+//                            BudgetStore.save(budget: budget) { result in
+//                                if case .failure(let error) = result {
+//                                    fatalError(error.localizedDescription)
+//                                }
+//                            }
+//                        }) {
+//                            Label("Let's get crazy", systemImage: "dice")
+//                        }
+//                    }
+//                }
+                
                 // List Backups
                 ForEach(budget.backups) { backup in
                     // View Backup
@@ -57,6 +79,9 @@ struct BackupsView: View {
                             fatalError(error.localizedDescription)
                         }
                     }
+                    
+                    // Random Data Gen
+                    randGen = false
                 }
             }
             .bold()
@@ -68,7 +93,9 @@ struct BackupsView: View {
 struct BackupsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            BackupsView(budget: .constant(Budget.sampleData))
+            BackupsView(budget: .constant(Budget.sampleData)
+                // Random Data Gen
+                , randGen: .constant(false))
         }
     }
 }

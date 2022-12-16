@@ -687,3 +687,131 @@ extension Budget {
                                            ]
     )
 }
+
+// Random Data Gen
+extension Budget {
+    mutating func generateRandomData() {
+        
+        // Random Generators
+        var date = Date()
+        let companyNames = [
+            "Walmart", "Amazon", "Apple", "CVS Health", "UnitedHealth Group", "Exxon Mobile", "Berkshire Hathaway", "Alphabet",
+            "McKesson", "AmerisourceBergen", "Costco Wholesale", "Cigna", "AT&T", "Microsoft", "Cardinal Health", "Chevron",
+            "Home Depot", "Walgreens Boot Alliance", "Marathon Petroleum", "Elevance Health", "Kroger", "Ford Motor",
+            "Verizon Communications", "JPMorgan Chase", "General Motors", "Centene", "Meta Platforms", "Comcast",
+            "Philips 66", "Valero Energy", "Dell Technologies", "Target", "Fannie Mae", "UPS", "Lowe's", "Bank of America",
+            "Johnson & Johnson", "Archer Daniels Midland", "FedEx", "Humana", "Wells Fargo", "State Farm Insurance",
+            "Pfizer", "Citigroup", "PepsiCo", "Intel", "Procter & Gamble", "General Electric", "IBM", "MetLife",
+            "Prudential Financial", "Albertsons", "Walt Disney", "Energy Transfer", "Lockheed Martin", "Freddie Mac",
+            "Goldman Sachs Group", "Raytheon Technologies", "HP", "Boeing", "Morgan Stanley", "HCAHealthcare", "AbbVie", "Dow",
+            "Tesla", "Allstate", "AIG", "Best Buy", "Charter Communications", "Sysco", "Merck", "New York Life Insurance",
+            "Caterpillar", "Cisco Systems", "TJX", "Publix Super Markets", "ConocoPhillips", "Liberty Mutual Insurance Group",
+            "Progressive", "Nationwide", "Tyson Foods", "Bristol-Myers Squibb", "Nike", "Deere", "American Express",
+            "Abbott Laboratories", "StoneX Group", "Plains GP Holdings", "Enterprise Holdings", "TIAA", "Oracle",
+            "Thermo Fisher Scientific", "Coca-Cola", "General Dynamics", "CHS", "USAA", "Northwestern Mutual", "Nucor",
+            "Exelon", "Massacusetts Mutual Life"
+        ]
+        
+        func randCompany()->String {
+            return companyNames[Int.random(in: 0..<100)]
+        }
+        
+        func randSalary()->Int {
+            let weightInt = Int.random(in: 0..<100)
+            
+            switch weightInt {
+            case 0..<4:
+                return Int.random(in: 1508000..<4738356)
+            case 4..<15:
+                return Int.random(in: 4738356..<5598576)
+            case 15..<50:
+                return Int.random(in: 5598576..<6453831)
+            case 50..<85:
+                return Int.random(in: 6453831..<7309086)
+            case 85..<96:
+                return Int.random(in: 7309086..<10291855)
+            case 96..<100:
+                return Int.random(in: 10291855..<11799855)
+            default:
+                return 0
+            }
+        }
+        
+        
+        
+        // Add Splits
+        settings.spendSplit = 60
+        let savings = Splittee(name: "Savings", portion: 25, transferAmount: 0, history: [])
+        let emergency = Splittee(name: "Emergency", portion: 10, transferAmount: 0, history: [])
+        let stocks = Splittee(name: "Stocks", portion: 5, transferAmount: 0, history: [])
+        
+        settings.splits.append(savings)
+        settings.splits.append(emergency)
+        settings.splits.append(stocks)
+        
+        
+        
+        // Generate Paychecks
+        if settings.payTerm == .weekly {
+            for _ in 0..<52 {
+                let source = randCompany()
+                let amount = (randSalary() / 52 * 76) / 100
+                let data = History.Data(source: source, amount: amount, date: date)
+                let _ = addPay(data: data)
+                date = Calendar.current.date(byAdding: .day, value: -7, to: date)!
+            }
+            
+        } else if settings.payTerm == .biweekly {
+            for _ in 0..<26 {
+                let source = randCompany()
+                let amount = (randSalary() / 26 * 76) / 100
+                let data = History.Data(source: source, amount: amount, date: date)
+                let _ = addPay(data: data)
+                date = Calendar.current.date(byAdding: .day, value: -14, to: date)!
+            }
+        } else if settings.payTerm == .monthly {
+            for _ in 0..<12 {
+                let source = randCompany()
+                let amount = (randSalary() / 12 * 76) / 100
+                let data = History.Data(source: source, amount: amount, date: date)
+                let _ = addPay(data: data)
+                date = Calendar.current.date(byAdding: .month, value: -1, to: date)!
+            }
+        }
+        date = Date()
+        
+        
+        
+        // Generate Expenses
+        let rent = Recurring.Data(name: "Rent", term: .monthlyRecur, cost: Int.random(in: 132600...190000))
+        let insurance = Recurring.Data(name: "Insurance", term: .monthlyRecur, cost: Int.random(in: 40000...60000))
+        let phone = Recurring.Data(name: "Phone Service", term: .monthlyRecur, cost: Int.random(in: 7000...13000))
+        
+        addRecurring(recur: Recurring(data: rent, payTerm: settings.payTerm))
+        addRecurring(recur: Recurring(data: insurance, payTerm: settings.payTerm))
+        addRecurring(recur: Recurring(data: phone, payTerm: settings.payTerm))
+        
+        var obiCost = obligation
+        switch settings.payTerm {
+        case .weekly:
+            obiCost *= 4
+        case .biweekly:
+            obiCost *= 2
+        default:
+            obiCost *= 1
+        }
+        
+        for _ in 0..<12 {
+            let recurExpense = History.Data(source: "Recurring", amount: obiCost, date: date)
+            let gas = History.Data(source: "Gas", amount: Int.random(in: 3239...5006) * 5, date: date)
+            let groceries = History.Data(source: "Groceries", amount: Int.random(in: 15000...30000), date: date)
+            
+            addPurchase(data: recurExpense, isIn: false)
+            addPurchase(data: gas, isIn: false)
+            addPurchase(data: groceries, isIn: false)
+            
+            date = Calendar.current.date(byAdding: .month, value: -1, to: date)!
+        }
+    }
+    
+}

@@ -14,6 +14,9 @@ struct MainView: View {
     @State private var data = Budget.Data()
     let saveAction: ()->Void
     
+    // Random Data Stuff
+    @State private var randGen = false
+    
     var body: some View {
         List {
             Section(header: Text("Transactions")) {
@@ -57,7 +60,11 @@ struct MainView: View {
 
             Section(header: Text("Backups")) {
                 // Backups
-                NavigationLink(destination: BackupsView(budget: $budget)) {
+                NavigationLink(destination: BackupsView(
+                    budget: $budget
+                    // Random Data Gen
+                    , randGen: $randGen
+                )) {
                     Label("Backups", systemImage: "square.and.arrow.down")
                 }
             }
